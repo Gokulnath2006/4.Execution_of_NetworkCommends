@@ -26,48 +26,55 @@ This commands includes
 • Other IP Commands e.g. show ip route etc.
 <BR>
 
-## Output
-## ipconfig :
-<img width="987" height="1199" alt="Screenshot 2025-10-27 103436" src="https://github.com/user-attachments/assets/c91d203e-5e48-4791-9a23-dbbb4610c9b1" />
+## PROGRAM
 
-## nslookup :
-<img width="665" height="678" alt="Screenshot 2025-10-27 103516" src="https://github.com/user-attachments/assets/b3a2576a-48b8-48b3-bbe0-476d026b426e" />
+## client
+```
+import socket
 
-## ping :
+s = socket.socket()
+s.connect(('localhost', 8000))
 
-<img width="931" height="324" alt="Screenshot 2025-10-27 103615" src="https://github.com/user-attachments/assets/d14be21b-17ba-4853-ae07-9bae2e301e19" />
+while True:
+    ip = input("Enter the website you want to ping (or type 'exit' to quit): ")
+    s.send(ip.encode('utf-8'))
+    if ip.lower() == 'exit':
+        break
+    print(s.recv(4096).decode('utf-8'))
 
+s.close()
+```
 
-## tracert :
-<img width="1063" height="513" alt="Screenshot 2025-10-27 103740" src="https://github.com/user-attachments/assets/ee114486-9dfc-4324-9023-d6fae5347d22" />
+## server
 
-## netstat :
-<img width="966" height="1136" alt="Screenshot 2025-10-27 103820" src="https://github.com/user-attachments/assets/91d1ff3b-ff89-4794-b2a2-caad93458173" />
+```
+import socket
+from pythonping import ping
 
+s = socket.socket()
+s.bind(('localhost', 8000))
+s.listen(5)
+print("Server listening on port 8000...")
+c, addr = s.accept()
+print(f"Connection from {addr}")
 
-## pathping :
-<img width="1268" height="580" alt="Screenshot 2025-10-27 104142" src="https://github.com/user-attachments/assets/c3dfcebb-eeac-4df4-ab3e-e480d4e5ce95" />
+while True:
+    try:
+        hostname = c.recv(1024).decode('utf-8')
+        if not hostname or hostname.lower() == 'exit':
+            print("Client disconnected.")
+            break
+        response = ping(hostname, verbose=False, count=4)
+        c.send(str(response).encode('utf-8'))
+    except Exception as e:
+        c.send(f"Ping failed: {e}".encode('utf-8'))
 
+c.close()
 
-## arp :
-<img width="969" height="787" alt="Screenshot 2025-10-27 104156" src="https://github.com/user-attachments/assets/d9528035-d082-4340-b63a-4c9448dd2d66" />
+```
 
-
-## getmac :
-<img width="980" height="214" alt="Screenshot 2025-10-27 104215" src="https://github.com/user-attachments/assets/0f6d9574-15d9-4db8-ae63-ef34f26e9707" />
-
-
-## systeminfo :
-<img width="1187" height="1137" alt="Screenshot 2025-10-27 104256" src="https://github.com/user-attachments/assets/897dfff2-d26e-4d5b-bc9e-ddbd9eeb2709" />
-
-## nbtstat :
-<img width="1146" height="618" alt="Screenshot 2025-10-27 104332" src="https://github.com/user-attachments/assets/b8991d29-7041-40b1-b98a-b232a75279bb" />
-
-
-
-
-
-
+## OUTPUT
+<img width="1263" height="754" alt="500451675-33107390-deee-4e68-bcd0-80e1583d4542" src="https://github.com/user-attachments/assets/9903049d-bccc-4544-b9bc-43b7de609f97" />
 
 
 
